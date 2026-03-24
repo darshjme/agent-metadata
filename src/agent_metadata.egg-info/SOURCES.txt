@@ -1,0 +1,16 @@
+README.md
+pyproject.toml
+src/agent_metadata/__init__.py
+src/agent_metadata/annotated.py
+src/agent_metadata/decorator.py
+src/agent_metadata/metadata.py
+src/agent_metadata/store.py
+src/agent_metadata.egg-info/PKG-INFO
+src/agent_metadata.egg-info/SOURCES.txt
+src/agent_metadata.egg-info/dependency_links.txt
+src/agent_metadata.egg-info/requires.txt
+src/agent_metadata.egg-info/top_level.txt
+tests/test_annotated.py
+tests/test_decorator.py
+tests/test_metadata.py
+tests/test_store.py
