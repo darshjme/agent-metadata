@@ -1,188 +1,112 @@
+<div align="center">
+<img src="assets/hero.svg" width="100%"/>
+</div>
+
 # agent-metadata
 
-**Metadata tagging and annotation for agent outputs** — provenance, cost, confidence, and latency tracking with zero dependencies.
+**Metadata tagging and provenance for LLM agents. Zero external dependencies.**
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+[![PyPI](https://img.shields.io/pypi/v/agent-metadata?color=blue)](https://pypi.org/project/agent-metadata/)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://python.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Zero deps](https://img.shields.io/badge/dependencies-zero-brightgreen)](pyproject.toml)
 
 ---
 
 ## The Problem
 
-Agent outputs are black boxes:
+Production LLM agents fail silently. Without metadata tagging and provenance, you get undefined behaviour at scale — race conditions, lost state, cascading failures, and no way to debug what went wrong.
 
-```
-"The capital of France is Paris."
-```
+`agent-metadata` gives you a production-ready metadata tagging and provenance primitive with a clean API, tested edge cases, and zero configuration.
 
-Which model? At what cost? How confident? How long did it take? You have no idea.
-
-## The Solution
-
-```python
-Annotated(
-    value="The capital of France is Paris.",
-    metadata=Metadata(
-        model="gpt-4o",
-        cost_usd=0.0032,
-        tokens=45,
-        latency_ms=312.5,
-        confidence=0.99,
-        timestamp="2024-03-24T17:00:00Z",
-    )
-)
-```
-
-Now every output carries its own provenance.
-
----
-
-## Install
+## Installation
 
 ```bash
 pip install agent-metadata
 ```
 
-*(Zero dependencies — works with Python ≥ 3.10 out of the box.)*
+Or from source:
 
----
+```bash
+git clone https://github.com/darshjme/agent-metadata.git
+cd agent-metadata
+pip install -e .
+```
 
 ## Quick Start
 
-### 1. Track an LLM call with the decorator
-
 ```python
-from agent_metadata import annotate, Annotated, Metadata
+from agent_metadata import *  # see API reference below
 
-@annotate(model="gpt-4o")
-def ask_llm(prompt: str) -> Annotated:
-    # Simulate calling your LLM API
-    response_text = "The capital of France is Paris."
-    return Annotated(
-        value=response_text,
-        metadata=Metadata(
-            tokens=45,
-            cost_usd=0.0032,
-            confidence=0.99,
-        )
-    )
-
-result = ask_llm("What is the capital of France?")
-print(result.value)
-# → "The capital of France is Paris."
-
-print(result.metadata.model)
-# → "gpt-4o"
-
-print(f"Cost: ${result.metadata.cost_usd:.4f}")
-# → "Cost: $0.0032"
-
-print(f"Latency: {result.metadata.latency_ms:.1f}ms")
-# → "Latency: 47.2ms"   (auto-captured by @annotate)
+# See examples/ directory for complete working examples
 ```
-
-### 2. Store and query outputs
-
-```python
-from agent_metadata import MetadataStore
-
-store = MetadataStore()
-
-# Store multiple outputs
-store.store("france_capital", ask_llm("What is the capital of France?"))
-store.store("sky_color", ask_llm("What color is the sky?"))
-
-print(f"Total stored: {store.count}")  # → 2
-
-# Filter: high-confidence, low-cost outputs from gpt-4o
-best_results = store.query(
-    model="gpt-4o",
-    min_confidence=0.95,
-    max_cost=0.01,
-)
-print(f"Quality results: {len(best_results)}")  # → 2
-```
-
-### 3. Merge and enrich metadata
-
-```python
-from agent_metadata import Metadata, Annotated
-
-base = Metadata(model="llama-3", tokens=128)
-perf = Metadata(latency_ms=88.3, cost_usd=0.0)
-
-full = base.merge(perf)
-print(full.to_dict())
-# → {'model': 'llama-3', 'tokens': 128, 'latency_ms': 88.3, 'cost_usd': 0.0}
-
-# Annotate in a pipeline
-raw = Annotated("blue", Metadata(model="llama-3"))
-enriched = raw.annotate(confidence=0.87, reviewed=True)
-print(enriched.metadata.to_dict())
-# → {'model': 'llama-3', 'confidence': 0.87, 'reviewed': True}
-```
-
-### 4. Serialise for logging / storage
-
-```python
-import json
-
-output = ask_llm("Why is the sky blue?")
-record = output.to_dict()
-
-print(json.dumps(record, indent=2))
-# {
-#   "value": "The sky is blue due to Rayleigh scattering.",
-#   "metadata": {
-#     "model": "gpt-4o",
-#     "tokens": 60,
-#     "cost_usd": 0.0042,
-#     "confidence": 0.97,
-#     "latency_ms": 391.7
-#   }
-# }
-```
-
----
 
 ## API Reference
 
-### `Metadata(**kwargs)`
+The main classes and functions are defined in `agent_metadata/__init__.py`.
 
-| Method | Returns | Description |
-|--------|---------|-------------|
-| `set(key, value)` | `Metadata` | Fluent field setter |
-| `get(key, default=None)` | `any` | Field accessor with default |
-| `merge(other)` | `Metadata` | New Metadata (other wins conflicts) |
-| `to_dict()` | `dict` | Plain dict serialisation |
-| `from_dict(data)` | `Metadata` | Class method deserialisation |
+Key exports: `Metadata · Annotated · MetadataStore · @annotate`
 
-**Built-in properties:** `model`, `cost_usd`, `tokens`, `latency_ms`, `confidence`, `timestamp`
+All classes follow a consistent interface:
+- Instantiate with sensible defaults
+- Compose with other arsenal libraries
+- Zero external dependencies required
 
-### `Annotated(value, metadata=None)`
+See the source code and `tests/` directory for verified usage examples.
 
-| Method/Property | Returns | Description |
-|-----------------|---------|-------------|
-| `.value` | `any` | The wrapped value |
-| `.metadata` | `Metadata` | Associated metadata |
-| `annotate(**kwargs)` | `Annotated` | New Annotated with merged metadata |
-| `to_dict()` | `dict` | `{"value": ..., "metadata": {...}}` |
+## How It Works
 
-### `MetadataStore()`
+```mermaid
+flowchart LR
+    A[Agent Task] --> B[agent-metadata]
+    B --> C{Decision}
+    C -->|success| D[✅ Result]
+    C -->|failure| E[⚠️ Handle]
+    E --> B
 
-| Method/Property | Returns | Description |
-|-----------------|---------|-------------|
-| `store(key, annotated)` | `None` | Store under key |
-| `get(key)` | `Annotated \| None` | Retrieve by key |
-| `query(model, min_confidence, max_cost)` | `list[Annotated]` | Filter stored items |
-| `.count` | `int` | Number of stored items |
+    style B fill:#161b22,stroke:#58a6ff,stroke-width:2,color:#58a6ff
+    style D fill:#1a3320,stroke:#238636,color:#3fb950
+    style E fill:#3d1a1a,stroke:#f85149,color:#f85149
+```
 
-### `@annotate(model=None, track_cost=False)`
+```mermaid
+sequenceDiagram
+    participant Agent
+    participant AgentMetadata as agent-metadata
+    participant Output
 
-Decorator factory. Auto-adds `latency_ms` and optional `model` tag. Plain return values are wrapped in `Annotated` automatically.
+    Agent->>AgentMetadata: initialize()
+    AgentMetadata-->>Agent: ready
+
+    loop Agent Run
+        Agent->>AgentMetadata: process(input)
+        AgentMetadata-->>Agent: result
+    end
+
+    Agent->>Output: deliver(result)
+```
+
+## Philosophy
+
+The Vedic rishis tagged every hymn — author, meter, deity, occasion. agent-metadata brings that rigour to agent outputs.
 
 ---
 
-## License
+## Part of the Arsenal
 
-MIT © 2024
+`agent-metadata` is one of six production libraries for LLM agents:
+
+| Library | Purpose |
+|---------|---------|
+| [herald](https://github.com/darshjme/herald) | Semantic task routing |
+| [engram](https://github.com/darshjme/engram) | Agent memory |
+| [sentinel](https://github.com/darshjme/sentinel) | ReAct loop guards |
+| [verdict](https://github.com/darshjme/verdict) | Agent evaluation |
+| [agent-guardrails](https://github.com/darshjme/agent-guardrails) | Output validation |
+| [agent-observability](https://github.com/darshjme/agent-observability) | Tracing & metrics |
+
+→ [arsenal](https://github.com/darshjme/arsenal) — the complete stack
+
+---
+
+*Built by [Darshankumar Joshi](https://github.com/darshjme), Gujarat, India.*
