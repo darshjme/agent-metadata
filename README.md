@@ -4,20 +4,15 @@
 
 # agent-metadata
 
-**Metadata tagging and provenance for LLM agents. Zero external dependencies.**
+**Metadata tagging and annotation for agent outputs — provenance, cost, confidence tracking.**
 
-[![PyPI](https://img.shields.io/pypi/v/agent-metadata?color=blue)](https://pypi.org/project/agent-metadata/)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://python.org)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Zero deps](https://img.shields.io/badge/dependencies-zero-brightgreen)](pyproject.toml)
+[![PyPI version](https://img.shields.io/pypi/v/agent-metadata?color=yellow&style=flat-square)](https://pypi.org/project/agent-metadata/) [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue?style=flat-square)](https://python.org) [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE) [![Tests](https://img.shields.io/badge/tests-passing-brightgreen?style=flat-square)](#)
 
 ---
 
 ## The Problem
 
-Production LLM agents fail silently. Without metadata tagging and provenance, you get undefined behaviour at scale — race conditions, lost state, cascading failures, and no way to debug what went wrong.
-
-`agent-metadata` gives you a production-ready metadata tagging and provenance primitive with a clean API, tested edge cases, and zero configuration.
+Without structured metadata, agent outputs are opaque blobs. Debugging which model produced which output, filtering by run-id, or correlating a response to its prompt becomes impossible. Metadata is the provenance layer that makes tracing real.
 
 ## Installation
 
@@ -25,88 +20,88 @@ Production LLM agents fail silently. Without metadata tagging and provenance, yo
 pip install agent-metadata
 ```
 
-Or from source:
-
-```bash
-git clone https://github.com/darshjme/agent-metadata.git
-cd agent-metadata
-pip install -e .
-```
-
 ## Quick Start
 
 ```python
-from agent_metadata import *  # see API reference below
+from agent_metadata import Annotated, Metadata
 
-# See examples/ directory for complete working examples
+# Initialise
+instance = Annotated(name="my_agent")
+
+# Use
+# see API reference below
+print(result)
 ```
 
 ## API Reference
 
-The main classes and functions are defined in `agent_metadata/__init__.py`.
+### `Annotated`
 
-Key exports: `Metadata · Annotated · MetadataStore · @annotate`
+```python
+class Annotated:
+    """Wraps any value with a Metadata object for full provenance tracking."""
+    def __init__(self, value: Any, metadata: Metadata | None = None) -> None:
+    def value(self) -> Any:
+        """The wrapped value."""
+    def metadata(self) -> Metadata:
+        """The associated Metadata object."""
+    def annotate(self, **kwargs: Any) -> "Annotated":
+        """Return a new Annotated with extra metadata merged in."""
+```
 
-All classes follow a consistent interface:
-- Instantiate with sensible defaults
-- Compose with other arsenal libraries
-- Zero external dependencies required
+### `Metadata`
 
-See the source code and `tests/` directory for verified usage examples.
+```python
+class Metadata:
+    """Key-value metadata container with built-in fields for agent provenance."""
+    def __init__(self, **kwargs: Any) -> None:
+    def set(self, key: str, value: Any) -> "Metadata":
+        """Set a metadata field. Returns self for fluent chaining."""
+    def get(self, key: str, default: Any = None) -> Any:
+        """Get a metadata field value, or *default* if not present."""
+    def merge(self, other: "Metadata") -> "Metadata":
+        """Return a new Metadata with fields from both (other wins on conflict)."""
+```
+
 
 ## How It Works
 
+### Flow
+
 ```mermaid
 flowchart LR
-    A[Agent Task] --> B[agent-metadata]
-    B --> C{Decision}
-    C -->|success| D[✅ Result]
-    C -->|failure| E[⚠️ Handle]
-    E --> B
-
-    style B fill:#161b22,stroke:#58a6ff,stroke-width:2,color:#58a6ff
-    style D fill:#1a3320,stroke:#238636,color:#3fb950
-    style E fill:#3d1a1a,stroke:#f85149,color:#f85149
+    A[User Code] -->|create| B[Annotated]
+    B -->|configure| C[Metadata]
+    C -->|execute| D{Success?}
+    D -->|yes| E[Return Result]
+    D -->|no| F[Error Handler]
+    F --> G[Fallback / Retry]
+    G --> C
 ```
+
+### Sequence
 
 ```mermaid
 sequenceDiagram
-    participant Agent
-    participant AgentMetadata as agent-metadata
-    participant Output
+    participant App
+    participant Annotated
+    participant Metadata
 
-    Agent->>AgentMetadata: initialize()
-    AgentMetadata-->>Agent: ready
-
-    loop Agent Run
-        Agent->>AgentMetadata: process(input)
-        AgentMetadata-->>Agent: result
-    end
-
-    Agent->>Output: deliver(result)
+    App->>+Annotated: initialise()
+    Annotated->>+Metadata: configure()
+    Metadata-->>-Annotated: ready
+    App->>+Annotated: run(context)
+    Annotated->>+Metadata: execute(context)
+    Metadata-->>-Annotated: result
+    Annotated-->>-App: WorkflowResult
 ```
 
 ## Philosophy
 
-The Vedic rishis tagged every hymn — author, meter, deity, occasion. agent-metadata brings that rigour to agent outputs.
+> *Namarupa* — name and form — are the tags that differentiate one phenomenon from another in consciousness.
 
 ---
 
-## Part of the Arsenal
-
-`agent-metadata` is one of six production libraries for LLM agents:
-
-| Library | Purpose |
-|---------|---------|
-| [herald](https://github.com/darshjme/herald) | Semantic task routing |
-| [engram](https://github.com/darshjme/engram) | Agent memory |
-| [sentinel](https://github.com/darshjme/sentinel) | ReAct loop guards |
-| [verdict](https://github.com/darshjme/verdict) | Agent evaluation |
-| [agent-guardrails](https://github.com/darshjme/agent-guardrails) | Output validation |
-| [agent-observability](https://github.com/darshjme/agent-observability) | Tracing & metrics |
-
-→ [arsenal](https://github.com/darshjme/arsenal) — the complete stack
-
----
+*Part of the [arsenal](https://github.com/darshjme/arsenal) — production stack for LLM agents.*
 
 *Built by [Darshankumar Joshi](https://github.com/darshjme), Gujarat, India.*
