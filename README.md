@@ -1,115 +1,103 @@
 <div align="center">
 
-<img src="assets/agent-metadata-hero.png" alt="agent-metadata — Vedic Arsenal by Darshankumar Joshi" width="100%" />
+<img src="assets/namarupa-hero.png" alt="नाम-रूप — namarupa by Darshankumar Joshi" width="100%" />
 
-# 🌿 agent-metadata
+# 🪷 नाम-रूप
+## `namarupa`
 
-<h3><em>नाम-रूप</em></h3>
+> *Chandogya Upanishad*
 
-> *Nama-Rupa — name and form, the metadata of existence*
+### Name and Form — the fabric of existence
 
-**Metadata tagging and provenance for agent outputs — Metadata, Annotated, MetadataStore, @annotate. Zero dependencies.**
+**Metadata management for LLM agent artifacts. Tagging, versioning, provenance tracking.**
 
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=flat-square&logo=python)](https://python.org)
-[![Zero Dependencies](https://img.shields.io/badge/Dependencies-Zero-brightgreen?style=flat-square)](https://github.com/darshjme/agent-metadata)
-[![Tests](https://img.shields.io/badge/Tests-Passing-success?style=flat-square)](https://github.com/darshjme/agent-metadata/actions)
-[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
-[![Vedic Arsenal](https://img.shields.io/badge/Vedic%20Arsenal-100%20libs-purple?style=flat-square)](https://github.com/darshjme/arsenal)
+[![Zero Dependencies](https://img.shields.io/badge/Dependencies-Zero-brightgreen?style=flat-square)](https://github.com/darshjme/namarupa)
+[![Vedic Arsenal](https://img.shields.io/badge/Vedic%20Arsenal-100%20libs-pink?style=flat-square)](https://github.com/darshjme/arsenal)
+[![License](https://img.shields.io/badge/License-MIT-pink?style=flat-square)](LICENSE)
 
-*Part of the [**Vedic Arsenal**](https://github.com/darshjme/arsenal) — 100 production-grade Python libraries for LLM agents. Zero dependencies. Battle-tested.*
+*Formerly `agent-metadata` — Part of the [**Vedic Arsenal**](https://github.com/darshjme/arsenal): 100 production-grade Python libraries for LLM agents, each named from the Vedas, Puranas, and Mahakavyas.*
 
 </div>
 
 ---
 
-## Overview
+## The Vedic Principle
 
-`agent-metadata` implements **metadata tagging and provenance for agent outputs — metadata, annotated, metadatastore, @annotate. zero dependencies.**
+The ancient *Namarupa* principle from Chandogya Upanishad finds its modern expression in this library.
 
-Inspired by the Vedic principle of *नाम-रूप* (Nama-Rupa), this library brings the ancient wisdom of structured discipline to modern LLM agent engineering.
+Just as the Vedic sages understood that every phenomenon in the universe follows deep patterns — patterns of creation, maintenance, and dissolution — `namarupa` applies this wisdom to LLM agent engineering.
 
-No external dependencies. Pure Python 3.8+. Drop it in anywhere.
+The concept of *नाम-रूप* (Name and Form — the fabric of existence) speaks directly to the technical problem this library solves. When the sages codified this principle in Chandogya Upanishad, they were describing not just a spiritual truth but a computational truth that would take humanity millennia to rediscover in silicon.
 
-## Installation
+This is not coincidence. The universe has one nature. The Vedas described it first.
 
-```bash
-pip install agent-metadata
-```
-
-Or clone directly:
-```bash
-git clone https://github.com/darshjme/agent-metadata.git
-cd agent-metadata
-pip install -e .
-```
+---
 
 ## How It Works
 
 ```mermaid
 flowchart LR
-    A[Input] --> B[agent-metadata]
+    A[Input] --> B[namarupa]
     B --> C{Process}
     C -- Success --> D[Output]
-    C -- Error --> E[Handle / Retry]
+    C -- Error --> E[Handle]
     E --> B
     style B fill:#6b21a8,color:#fff
-    note["Metadata — Zero Dependencies"]
+```
+
+---
+
+## Installation
+
+```bash
+pip install namarupa
+```
+
+Or from source:
+```bash
+git clone https://github.com/darshjme/namarupa.git
+cd namarupa && pip install -e .
 ```
 
 ## Quick Start
 
 ```python
-from metadata import *
+from namarupa import *
 
-# Initialize
-# See examples/ for full usage patterns
+# See examples/ for full usage
 ```
 
-## Why `agent-metadata`?
-
-Production LLM systems fail in predictable ways. `agent-metadata` solves the **metadata** failure mode with:
-
-- **Zero dependencies** — no version conflicts, no bloat
-- **Battle-tested patterns** — extracted from real production systems
-- **Type-safe** — full type hints, mypy-compatible
-- **Minimal surface area** — one job, done well
-- **Composable** — works with any LLM framework (LangChain, LlamaIndex, raw OpenAI, etc.)
+---
 
 ## The Vedic Arsenal
 
-`agent-metadata` is part of **[darshjme/arsenal](https://github.com/darshjme/arsenal)** — a collection of 100 focused Python libraries for LLM agent infrastructure.
+`namarupa` is one of 100 libraries in **[darshjme/arsenal](https://github.com/darshjme/arsenal)** — each named from sacred Indian literature:
 
-Each library solves exactly one problem. Together they form a complete stack.
+| Sanskrit Name | Source | Technical Function |
+|---|---|---|
+| `namarupa` | Chandogya Upanishad | Name and Form — the fabric of existence |
 
-```
-pip install agent-metadata  # this library
-# Browse all 100: https://github.com/darshjme/arsenal
-```
+Each library solves one problem. Zero external dependencies. Pure Python 3.8+.
+
+---
 
 ## Contributing
 
-Found a bug? Have an improvement?
-
 1. Fork the repo
-2. Create a feature branch (`git checkout -b fix/your-fix`)
-3. Add tests
+2. Create feature branch (`git checkout -b fix/your-fix`)  
+3. Add tests — zero dependencies only
 4. Open a PR
-
-All contributions welcome. Keep it zero-dependency.
-
-## License
-
-MIT — use freely, build freely.
 
 ---
 
 <div align="center">
 
-**Built with 🌿 by [Darshankumar Joshi](https://github.com/darshjme)** · [@thedarshanjoshi](https://twitter.com/thedarshanjoshi)
+**🪷 Built by [Darshankumar Joshi](https://github.com/darshjme)** · [@thedarshanjoshi](https://twitter.com/thedarshanjoshi)
 
 *"कर्मण्येवाधिकारस्ते मा फलेषु कदाचन"*
-*Your right is to action alone, never to the fruits thereof.*
+*Your right is to action alone, never to its fruits. — Bhagavad Gita 2.47*
 
-[Arsenal](https://github.com/darshjme/arsenal) · [GitHub](https://github.com/darshjme) · [Twitter](https://twitter.com/thedarshanjoshi)
+[Vedic Arsenal](https://github.com/darshjme/arsenal) · [GitHub](https://github.com/darshjme) · [Twitter](https://twitter.com/thedarshanjoshi)
 
 </div>
