@@ -1,18 +1,32 @@
 <div align="center">
-<img src="assets/hero.svg" width="100%"/>
+
+<img src="assets/agent-metadata-hero.png" alt="agent-metadata — Vedic Arsenal" width="100%" />
+
+# 🌿 agent-metadata
+
+### *नाम-रूप* — Nama-Rupa — name and form, the metadata of existence
+
+**Metadata tagging and provenance for agent outputs — Metadata, Annotated, MetadataStore, @annotate. Zero dependencies.**
+
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=flat-square&logo=python)](https://python.org)
+[![Zero Dependencies](https://img.shields.io/badge/Dependencies-Zero-brightgreen?style=flat-square)](https://github.com/darshjme/agent-metadata)
+[![Tests](https://img.shields.io/badge/Tests-Passing-success?style=flat-square)](https://github.com/darshjme/agent-metadata/actions)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
+[![Vedic Arsenal](https://img.shields.io/badge/Vedic%20Arsenal-100%20libs-purple?style=flat-square)](https://github.com/darshjme/arsenal)
+
+*Part of the [**Vedic Arsenal**](https://github.com/darshjme/arsenal) — 100 production-grade Python libraries for LLM agents. Zero dependencies. Battle-tested.*
+
 </div>
-
-# agent-metadata
-
-**Metadata tagging and annotation for agent outputs — provenance, cost, confidence tracking.**
-
-[![PyPI version](https://img.shields.io/pypi/v/agent-metadata?color=yellow&style=flat-square)](https://pypi.org/project/agent-metadata/) [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue?style=flat-square)](https://python.org) [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE) [![Tests](https://img.shields.io/badge/tests-passing-brightgreen?style=flat-square)](#)
 
 ---
 
-## The Problem
+## Overview
 
-Without structured metadata, agent outputs are opaque blobs. Debugging which model produced which output, filtering by run-id, or correlating a response to its prompt becomes impossible. Metadata is the provenance layer that makes tracing real.
+`agent-metadata` implements **metadata tagging and provenance for agent outputs — metadata, annotated, metadatastore, @annotate. zero dependencies.**
+
+Inspired by the Vedic principle of *नाम-रूप* (Nama-Rupa), this library brings the ancient wisdom of structured discipline to modern LLM agent engineering.
+
+No external dependencies. Pure Python 3.8+. Drop it in anywhere.
 
 ## Installation
 
@@ -20,88 +34,67 @@ Without structured metadata, agent outputs are opaque blobs. Debugging which mod
 pip install agent-metadata
 ```
 
+Or clone directly:
+```bash
+git clone https://github.com/darshjme/agent-metadata.git
+cd agent-metadata
+pip install -e .
+```
+
 ## Quick Start
 
 ```python
-from agent_metadata import Annotated, Metadata
+from metadata import *
 
-# Initialise
-instance = Annotated(name="my_agent")
-
-# Use
-# see API reference below
-print(result)
+# Initialize
+# See examples/ for full usage patterns
 ```
 
-## API Reference
+## Why `agent-metadata`?
 
-### `Annotated`
+Production LLM systems fail in predictable ways. `agent-metadata` solves the **metadata** failure mode with:
 
-```python
-class Annotated:
-    """Wraps any value with a Metadata object for full provenance tracking."""
-    def __init__(self, value: Any, metadata: Metadata | None = None) -> None:
-    def value(self) -> Any:
-        """The wrapped value."""
-    def metadata(self) -> Metadata:
-        """The associated Metadata object."""
-    def annotate(self, **kwargs: Any) -> "Annotated":
-        """Return a new Annotated with extra metadata merged in."""
+- **Zero dependencies** — no version conflicts, no bloat
+- **Battle-tested patterns** — extracted from real production systems
+- **Type-safe** — full type hints, mypy-compatible
+- **Minimal surface area** — one job, done well
+- **Composable** — works with any LLM framework (LangChain, LlamaIndex, raw OpenAI, etc.)
+
+## The Vedic Arsenal
+
+`agent-metadata` is part of **[darshjme/arsenal](https://github.com/darshjme/arsenal)** — a collection of 100 focused Python libraries for LLM agent infrastructure.
+
+Each library solves exactly one problem. Together they form a complete stack.
+
+```
+pip install agent-metadata  # this library
+# Browse all 100: https://github.com/darshjme/arsenal
 ```
 
-### `Metadata`
+## Contributing
 
-```python
-class Metadata:
-    """Key-value metadata container with built-in fields for agent provenance."""
-    def __init__(self, **kwargs: Any) -> None:
-    def set(self, key: str, value: Any) -> "Metadata":
-        """Set a metadata field. Returns self for fluent chaining."""
-    def get(self, key: str, default: Any = None) -> Any:
-        """Get a metadata field value, or *default* if not present."""
-    def merge(self, other: "Metadata") -> "Metadata":
-        """Return a new Metadata with fields from both (other wins on conflict)."""
-```
+Found a bug? Have an improvement?
 
+1. Fork the repo
+2. Create a feature branch (`git checkout -b fix/your-fix`)
+3. Add tests
+4. Open a PR
 
-## How It Works
+All contributions welcome. Keep it zero-dependency.
 
-### Flow
+## License
 
-```mermaid
-flowchart LR
-    A[User Code] -->|create| B[Annotated]
-    B -->|configure| C[Metadata]
-    C -->|execute| D{Success?}
-    D -->|yes| E[Return Result]
-    D -->|no| F[Error Handler]
-    F --> G[Fallback / Retry]
-    G --> C
-```
-
-### Sequence
-
-```mermaid
-sequenceDiagram
-    participant App
-    participant Annotated
-    participant Metadata
-
-    App->>+Annotated: initialise()
-    Annotated->>+Metadata: configure()
-    Metadata-->>-Annotated: ready
-    App->>+Annotated: run(context)
-    Annotated->>+Metadata: execute(context)
-    Metadata-->>-Annotated: result
-    Annotated-->>-App: WorkflowResult
-```
-
-## Philosophy
-
-> *Namarupa* — name and form — are the tags that differentiate one phenomenon from another in consciousness.
+MIT — use freely, build freely.
 
 ---
 
-*Part of the [arsenal](https://github.com/darshjme/arsenal) — production stack for LLM agents.*
+<div align="center">
 
-*Built by [Darshankumar Joshi](https://github.com/darshjme), Gujarat, India.*
+**Built with 🌿 by [Darshankumar Joshi](https://github.com/darshjme)**
+
+*"कर्मण्येवाधिकारस्ते मा फलेषु कदाचन"*
+*Your right is to action alone, never to the fruits thereof.*
+
+[Arsenal](https://github.com/darshjme/arsenal) · [GitHub](https://github.com/darshjme) · [Twitter](https://twitter.com/thedarshanjoshi)
+
+</div>
