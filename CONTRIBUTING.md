@@ -13,7 +13,9 @@ pip install -e ".[dev]"
 ## Running Tests
 
 ```bash
-python -m pytest tests/ -v
+PYTHONPATH=src python -m pytest tests/ -v
+
+> **Note:** `PYTHONPATH=src` is required for libraries using a `src/` layout.
 ```
 
 ## Guidelines
